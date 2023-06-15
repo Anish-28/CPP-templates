@@ -1,0 +1,25 @@
+ string str="";
+ while(cin>>ch&&ch!=EOF){
+  str+=ch;
+ }
+ n=str.length();
+
+
+string str;
+getline (cin, str);
+istringstream ss(str);
+
+string word; // for storing each word
+
+// Traverse through all words
+// while loop till we get
+// strings to store in string word
+ll n = 0;
+while (ss >> word)
+{
+    n = word.size();
+    // print the read word
+    // cout << word << "\n";
+}
+    print(n);
+}
