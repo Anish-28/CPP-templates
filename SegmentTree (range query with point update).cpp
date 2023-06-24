@@ -44,6 +44,28 @@ public:
 		return max(leftSeg, rightSeg);
 	}
 
+	//increase the value at node index by val
+	//if it is a point update make sure you remove the lazy vector
+	void pointUpdate_max(ll i, ll l_range, ll r_range, ll node, ll val) {
+
+		if (l_range == r_range) {
+			seg[i] += val;
+		}
+		else {
+
+			ll mid = l_range + (r_range - l_range) / 2LL;
+
+			if ((node >= l_range) && (node <= mid)) {
+				this->pointUpdate_max((2LL * i) + 1LL, l_range, mid, node, val);
+			}
+			else {
+				this->pointUpdate_max((2LL * i) + 2LL, mid + 1LL, r_range, node, val);
+			}
+
+			seg[i] = max(seg[(2LL * i) + 1LL] , seg[(2LL * i) + 2LL]);
+		}
+	}
+
 	void build_min(ll i, ll l_range, ll r_range) {
 
 		if (l_range == r_range) {
@@ -73,6 +95,28 @@ public:
 		ll rightSeg = this->query_min((2LL * i) + 2LL, mid + 1LL, r_range, l_query, r_query);
 
 		return min(leftSeg, rightSeg);
+	}
+
+	//increase the value at node index by val
+	//if it is a point update make sure you remove the lazy vector
+	void pointUpdate_min(ll i, ll l_range, ll r_range, ll node, ll val) {
+
+		if (l_range == r_range) {
+			seg[i] += val;
+		}
+		else {
+
+			ll mid = l_range + (r_range - l_range) / 2LL;
+
+			if ((node >= l_range) && (node <= mid)) {
+				this->pointUpdate_min((2LL * i) + 1LL, l_range, mid, node, val);
+			}
+			else {
+				this->pointUpdate_min((2LL * i) + 2LL, mid + 1LL, r_range, node, val);
+			}
+
+			seg[i] = min(seg[(2LL * i) + 1LL] , seg[(2LL * i) + 2LL]);
+		}
 	}
 
 	void build_sum(ll i, ll l_range, ll r_range) {
@@ -106,6 +150,7 @@ public:
 		return leftSeg + rightSeg;
 	}
 
+	//increase the value at node index by val
 	//if it is a point update make sure you remove the lazy vector
 	void pointUpdate_sum(ll i, ll l_range, ll r_range, ll node, ll val) {
 

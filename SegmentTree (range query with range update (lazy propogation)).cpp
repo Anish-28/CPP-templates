@@ -44,6 +44,96 @@ public:
 		return max(leftSeg, rightSeg);
 	}
 
+	//increase the value at node index by val
+	//if it is a point update make sure you remove the lazy vector
+	void pointUpdate_max(ll i, ll l_range, ll r_range, ll node, ll val) {
+
+		if (l_range == r_range) {
+			seg[i] += val;
+		}
+		else {
+
+			ll mid = l_range + (r_range - l_range) / 2LL;
+
+			if ((node >= l_range) && (node <= mid)) {
+				this->pointUpdate_max((2LL * i) + 1LL, l_range, mid, node, val);
+			}
+			else {
+				this->pointUpdate_max((2LL * i) + 2LL, mid + 1LL, r_range, node, val);
+			}
+
+			seg[i] = max(seg[(2LL * i) + 1LL] , seg[(2LL * i) + 2LL]);
+		}
+	}
+
+	//increase the value of l to r by val
+	void rangeUpdate_max(ll i, ll l_range, ll r_range, ll l_incr, ll r_incr, ll val) {
+
+		//first update the lazy tree if needed
+		if (lazy[i] != 0LL) {
+
+			seg[i] += lazy[i];
+
+			if (l_range != r_range) {
+				lazy[(2LL * i) + 1LL] += lazy[i];
+				lazy[(2LL * i) + 2LL] += lazy[i];
+			}
+
+			lazy[i] = 0LL;
+		}
+
+		if ((r_incr < l_range) || (l_incr > r_range) || (l_range > r_range))
+			return;
+
+		//if seg tree range completely lies then add value to that node
+		//and update values of child nodes of current node (propogate updates)
+		if ((l_range >= l_incr) && (r_range <= r_incr)) {
+			seg[i] += val;
+			if (l_range != r_range) {
+				lazy[(2LL * i) + 1LL] += val;
+				lazy[(2LL * i) + 2LL] += val;
+			}
+			return;
+		}
+
+		//partial overlap case
+		ll mid = l_range + (r_range - l_range) / 2LL;
+		this->rangeUpdate_max((2LL * i) + 1LL, l_range, mid, l_incr, r_incr, val);
+		this->rangeUpdate_max((2LL * i) + 2LL, mid + 1LL, r_range, l_incr, r_incr, val);
+		seg[i] = max(seg[(2LL * i) + 1LL] , seg[(2LL * i) + 2LL]);
+	}
+
+	//use this if you are using rangeUpdate_max
+	ll query_maxLazy(ll i, ll l_range, ll r_range, ll l_incr, ll r_incr) {
+
+		//first update the lazy tree if needed
+		if (lazy[i] != 0LL) {
+
+			seg[i] += (r_range - l_range + 1LL) * lazy[i];
+
+			if (l_range != r_range) {
+				lazy[(2LL * i) + 1LL] += lazy[i];
+				lazy[(2LL * i) + 2LL] += lazy[i];
+			}
+
+			lazy[i] = 0LL;
+		}
+
+		if ((r_incr < l_range) || (l_incr > r_range) || (l_range > r_range))
+			return -1e16;
+
+		if ((l_range >= l_incr) && (r_range <= r_incr)) {
+			return seg[i];
+		}
+
+		//partial overlap case
+		ll mid = l_range + (r_range - l_range) / 2LL;
+		ll leftSeg = this->query_maxLazy((2LL * i) + 1LL, l_range, mid, l_incr, r_incr);
+		ll rightSeg = this->query_maxLazy((2LL * i) + 2LL, mid + 1LL, r_range, l_incr, r_incr);
+
+		return max(leftSeg , rightSeg);
+	}
+
 	void build_min(ll i, ll l_range, ll r_range) {
 
 		if (l_range == r_range) {
@@ -73,6 +163,96 @@ public:
 		ll rightSeg = this->query_min((2LL * i) + 2LL, mid + 1LL, r_range, l_query, r_query);
 
 		return min(leftSeg, rightSeg);
+	}
+
+	//increase the value at node index by val
+	//if it is a point update make sure you remove the lazy vector
+	void pointUpdate_min(ll i, ll l_range, ll r_range, ll node, ll val) {
+
+		if (l_range == r_range) {
+			seg[i] += val;
+		}
+		else {
+
+			ll mid = l_range + (r_range - l_range) / 2LL;
+
+			if ((node >= l_range) && (node <= mid)) {
+				this->pointUpdate_min((2LL * i) + 1LL, l_range, mid, node, val);
+			}
+			else {
+				this->pointUpdate_min((2LL * i) + 2LL, mid + 1LL, r_range, node, val);
+			}
+
+			seg[i] = min(seg[(2LL * i) + 1LL] , seg[(2LL * i) + 2LL]);
+		}
+	}
+
+	//increase the value of l to r by val
+	void rangeUpdate_min(ll i, ll l_range, ll r_range, ll l_incr, ll r_incr, ll val) {
+
+		//first update the lazy tree if needed
+		if (lazy[i] != 0LL) {
+
+			seg[i] += lazy[i];
+
+			if (l_range != r_range) {
+				lazy[(2LL * i) + 1LL] += lazy[i];
+				lazy[(2LL * i) + 2LL] += lazy[i];
+			}
+
+			lazy[i] = 0LL;
+		}
+
+		if ((r_incr < l_range) || (l_incr > r_range) || (l_range > r_range))
+			return;
+
+		//if seg tree range completely lies then add value to that node
+		//and update values of child nodes of current node (propogate updates)
+		if ((l_range >= l_incr) && (r_range <= r_incr)) {
+			seg[i] += val;
+			if (l_range != r_range) {
+				lazy[(2LL * i) + 1LL] += val;
+				lazy[(2LL * i) + 2LL] += val;
+			}
+			return;
+		}
+
+		//partial overlap case
+		ll mid = l_range + (r_range - l_range) / 2LL;
+		this->rangeUpdate_min((2LL * i) + 1LL, l_range, mid, l_incr, r_incr, val);
+		this->rangeUpdate_min((2LL * i) + 2LL, mid + 1LL, r_range, l_incr, r_incr, val);
+		seg[i] = min(seg[(2LL * i) + 1LL] , seg[(2LL * i) + 2LL]);
+	}
+
+	//use this if you are using rangeUpdate_max
+	ll query_minLazy(ll i, ll l_range, ll r_range, ll l_incr, ll r_incr) {
+
+		//first update the lazy tree if needed
+		if (lazy[i] != 0LL) {
+
+			seg[i] += (r_range - l_range + 1LL) * lazy[i];
+
+			if (l_range != r_range) {
+				lazy[(2LL * i) + 1LL] += lazy[i];
+				lazy[(2LL * i) + 2LL] += lazy[i];
+			}
+
+			lazy[i] = 0LL;
+		}
+
+		if ((r_incr < l_range) || (l_incr > r_range) || (l_range > r_range))
+			return 1e16;
+
+		if ((l_range >= l_incr) && (r_range <= r_incr)) {
+			return seg[i];
+		}
+
+		//partial overlap case
+		ll mid = l_range + (r_range - l_range) / 2LL;
+		ll leftSeg = this->query_minLazy((2LL * i) + 1LL, l_range, mid, l_incr, r_incr);
+		ll rightSeg = this->query_minLazy((2LL * i) + 2LL, mid + 1LL, r_range, l_incr, r_incr);
+
+		return min(leftSeg , rightSeg);
 	}
 
 	void build_sum(ll i, ll l_range, ll r_range) {
@@ -106,6 +286,7 @@ public:
 		return leftSeg + rightSeg;
 	}
 
+	//increase the value at node index by val
 	//if it is a point update make sure you remove the lazy vector
 	void pointUpdate_sum(ll i, ll l_range, ll r_range, ll node, ll val) {
 
