@@ -51,5 +51,5 @@ int main()
     //cout<<range(1,3);
     update(4,-1);
     update(5,3);
-    cout<<range(4,5);
+    cout<<range(4,5)<<endl;
 }
