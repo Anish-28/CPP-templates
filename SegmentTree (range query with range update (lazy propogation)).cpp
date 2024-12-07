@@ -109,7 +109,7 @@ public:
 		//first update the lazy tree if needed
 		if (lazy[i] != 0LL) {
 
-			seg[i] += (r_range - l_range + 1LL) * lazy[i];
+			seg[i] += lazy[i];
 
 			if (l_range != r_range) {
 				lazy[(2LL * i) + 1LL] += lazy[i];
@@ -230,7 +230,7 @@ public:
 		//first update the lazy tree if needed
 		if (lazy[i] != 0LL) {
 
-			seg[i] += (r_range - l_range + 1LL) * lazy[i];
+			seg[i] += lazy[i];
 
 			if (l_range != r_range) {
 				lazy[(2LL * i) + 1LL] += lazy[i];

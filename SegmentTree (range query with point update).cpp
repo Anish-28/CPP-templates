@@ -150,6 +150,20 @@ public:
 		return leftSeg + rightSeg;
 	}
 
+	// find the first index where sum >= wantSum is O(log(n))
+	pair<ll, ll> walk(ll i, ll l_range, ll r_range, ll sum, ll wantSum) {
+		if (l_range == r_range) {
+			return {sum + seg[i], l_range};
+		}
+
+		ll mid = l_range + (r_range - l_range) / 2LL;
+
+		if (seg[2 * i + 1] + sum >= wantSum)
+			return walk(2 * i + 1, l_range, mid, sum, wantSum);
+
+		return walk(2 * i + 2, mid + 1, r_range, sum + seg[2 * i + 1], wantSum);
+	}
+
 	//increase the value at node index by val
 	//if it is a point update make sure you remove the lazy vector
 	void pointUpdate_sum(ll i, ll l_range, ll r_range, ll node, ll val) {
