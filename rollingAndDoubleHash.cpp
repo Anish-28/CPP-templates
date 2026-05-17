@@ -1,6 +1,6 @@
 // Lucky Primes
 // 1000010801
-// 1000010281
+// 972663749
 
 void rabinKarp(string s, string pat, ll mod, ll base) {
 
